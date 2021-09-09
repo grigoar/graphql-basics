@@ -1,9 +1,9 @@
 const { response } = require("express");
 const express = require("express");
-// const { graphqlHTTP } = require("express-graphql");
+const { graphqlHTTP } = require("express-graphql");
 // const { graphqlHTTP } = require("express-graphql");
 // const { GraphQLSchema, GraphQLObjectType, GraphQLString } = require("graphql");
-const { graphql, buildSchema } = require("graphql");
+const { buildSchema } = require("graphql");
 
 //Construct a schema, using GraphQL schema language
 const schema = buildSchema(`
@@ -18,18 +18,32 @@ const root = {
   },
 };
 
+const app = express();
+app.use(
+  "/graphql",
+  graphqlHTTP({
+    schema: schema,
+    rootValue: root,
+    graphiql: true,
+  })
+);
+app.listen(4000);
+console.log(
+  "Running a GraphQL Api server at port http://localhost:4000/graphql"
+);
+
 //Run the GraphQL query `{hello}' and print out the response
-graphql(
-  schema,
-  `
-    {
-      hello
-    }
-  `,
-  root
-).then((response) => {
-  console.log(response);
-});
+// graphql(
+//   schema,
+//   `
+//     {
+//       hello
+//     }
+//   `,
+//   root
+// ).then((response) => {
+//   console.log(response);
+// });
 
 // const app = express();
 // const schema1 = new GraphQLSchema({
